@@ -22,7 +22,7 @@ theme_set(theme_ipsum(axis_title_size = 14,
 
 ###--- Manually classified domain categories
 domain_type <-
-  read_tsv("data/main/domain_annotated.tsv") |> 
+  read_tsv("data/domains/domain_annotated.tsv") |> 
   mutate(type = ifelse(category == "News", "News", "Other")) |> 
   select(domain, type) |> 
   mutate(domain = str_remove(domain, "www."),

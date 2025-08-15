@@ -151,17 +151,19 @@ setDT(network)
 degree <- network[, .(n = .N), by = .(ideo_bi, alter_ideo_bi, alter_int)]
 
 
-gini = 
+r7 = 
   degree %>% 
   filter(ideo_bi == alter_ideo_bi) %>% 
   group_by(alter_ideo_bi) %>% 
-  summarise(gini = Gini(n))
+  summarise(value = as.character(round(Gini(n), 3))) |> 
+  rename(ideo = alter_ideo_bi) |> 
+  mutate(cat = "Ingroup alters' indegree inequality")
 
 
 
 ###--- Create the table
 tbl = 
-  bind_rows(r1,r2,r3,r4,r5,r6) %>% 
+  bind_rows(r1,r2,r3,r4,r5,r6,r7) %>% 
   pivot_wider(names_from = ideo, values_from = value) %>% 
   select(" " = cat, Liberals = Liberal, Conservatives = Conservative) %>% 
   as.data.frame()
