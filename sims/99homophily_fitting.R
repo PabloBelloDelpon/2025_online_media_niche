@@ -72,13 +72,13 @@ p1 <-
 
 #######################################################
 ###---- Differential homophily ---###
-c = 2
-alpha = exp(1:100*.05)
-alpha = (alpha - min(alpha))/(max(alpha) - min(alpha))
+alpha = exp(1:100*.1)
+###---
+alpha <- ((1:100-1)/99)^3
+###---
 alpha <- tibble(ego_ntile = 1:100, alpha) 
-
 alpha |> 
-  ggplot(aes(ego_ntile, alpha)) + geom_point()
+  ggplot(aes(ego_ntile, -alpha)) + geom_point()
 
 
 hom_tbl = expand.grid(ego_ntile = 1:100, alter_ntile = 1:100)
@@ -88,13 +88,17 @@ hom_tbl <-
   left_join(tbl |> select(ego_ntile = q, ego_ideo = ideo_q)) |> 
   left_join(tbl |> select(alter_ntile = q, alter_ideo = ideo_q)) |> 
   mutate(dist = abs(ego_ideo - alter_ideo),
-         prob = c*exp(-alpha*dist)) %>% 
+         prob = exp(-alpha*dist)) %>% 
+  group_by(ego_ntile) |> 
   mutate(prob = prob/sum(prob))
 
+hom_tbl |> filter(dist == 0)
 hom_tbl %>%
-  filter(ego_ntile %in% c(10, 90)) |> 
-  ggplot(aes(dist, prob)) +
-  geom_point()
+  filter(ego_ntile %in% seq(10,100,20)) |> 
+  ggplot(aes(dist, prob, color = ego_ntile, group = ego_ntile)) +
+  geom_point() +
+  geom_line() +
+  ylim(c(0,.1))
 
 n_alters <-  1e5
 mean_diff <- c()
