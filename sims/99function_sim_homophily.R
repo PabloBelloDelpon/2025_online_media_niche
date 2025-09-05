@@ -1,7 +1,7 @@
 
 homophily <- function(k, h) {
   
-  beta <- ((1:100-1)/99)^k # beta sub i
+  beta <- (1:100/100)^k # beta sub i
   beta <- tibble(ego_ntile = 1:100, beta)
   
   hom_tbl = expand.grid(ego_ntile = 1:100, alter_ntile = 1:100)
