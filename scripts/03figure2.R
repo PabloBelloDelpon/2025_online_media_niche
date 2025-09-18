@@ -24,7 +24,7 @@ domain_colors <-
     domain_color = rev(colfunc(2)))
 
 ###---Read the data
-alpha <-  c("0.15", "0.005") # homophily level
+alpha <-  c("0.8", "0.005") # homophily level
 
 ###--- Exposures dataset
 data <- readRDS("data/main/ego_alter_domain_tabs.RDS")
