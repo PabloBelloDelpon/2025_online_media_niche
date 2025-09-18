@@ -1,7 +1,7 @@
 ###--- Libraries
 library(tidyverse)
 library(hrbrthemes)
-library(virids)
+library(viridis)
 library(patchwork)
 
 
@@ -49,7 +49,9 @@ p1 <-
     y = "Asymmetry parameter (k)",
     x = "Homophily strength parameter (Beta)",
     fill = "Fit"
-  ) 
+  ) +
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank())
 
 
 
@@ -85,7 +87,7 @@ p2 <-
   ) +
   theme(
     legend.position = c(1, .5),
-    legend.justification = c(1, 0)
+    legend.justification = c(1, 0),
   )
 
 
