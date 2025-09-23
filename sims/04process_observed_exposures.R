@@ -8,15 +8,14 @@ domains <- tribble(~ "domain", ~ "domain_name",
                    "dailykos", "Daily Kos",
                    "politicususa", "Politicus USA",
                    "rawstory", "Raw Story",
-                   "motherjones", "Mother Jones",
                    "thedcpatriot", "The DC Patriot",
                    "oann", "One America",
                    "thepostmillennial", "The Post Millenial",
                    "amgreatness", "American Greatness",
-                   "justthenews", "Just the News",
                    "Liberal domains", "Liberal domains",
                    "Conservative domains", "Conservative domains"
 )
+
 
 ###--- Exposures dataset
 data <- readRDS("data/main/ego_alter_domain_tabs.RDS")
@@ -26,6 +25,17 @@ data <- data %>% mutate(domain_ideo_tile = ntile(domain_ideo, 100))
 lib_top10 <- data %>% distinct(domain, .keep_all = TRUE) %>% arrange(domain_ideo) %>% slice_head(n = 10) %>% pull(domain)
 cons_top10 <- data %>% distinct(domain, .keep_all = TRUE) %>% arrange(desc(domain_ideo)) %>% slice_head(n = 10) %>% pull(domain)
 total_exposures <-data |> group_by(domain) |> summarise(total_domain_exposures = sum(n))
+
+extreme_domains_tbl <- 
+  tibble(domain = c(lib_top10, cons_top10),
+         type = c(rep("Liberal domains", length(lib_top10)), 
+                  rep("Conservative domains", length(cons_top10)))) |> 
+  full_join(domains) |> 
+  mutate(type = ifelse(is.na(type), domain, type)) |> 
+  mutate(top4 = ifelse(is.na(domain_name) == FALSE, TRUE, FALSE)) |> 
+  mutate(domain_name = factor(domain_name, levels = domains$domain_name))
+
+saveRDS(extreme_domains_tbl, "data/extreme_domains.rds")
 
 ###---  All Alters
 tbl_exposures <-  
