@@ -35,62 +35,65 @@ p1 <-
   asym_model |>
   mutate(
     k_label = factor(k, levels = sort(unique(k))) |> 
-      fct_recode("Symmetric" = "0")  # label k=0 as Symmetric
+      fct_recode("Equal" = "0")  # label k=0 as Symmetric
   ) |>
   ggplot(aes(h, k_label, fill = fit)) +
   geom_tile() +
   scale_fill_viridis(option = "magma",
-                     name = "Fit", 
-                     trans = "log") + 
+                     name = "MAE") + 
   scale_y_discrete(
-    breaks = c("Symmetric", "0.5", "1", "1.5", "2")
+    breaks = c("Equal", "0.5", "1", "1.5", "2")
   ) +
   labs(
-    y = "Asymmetry parameter (k)",
-    x = "Homophily strength parameter (Beta)",
+    y = "Homophily variance parameter (k)",
+    x = expression("Homophily strength parameter (" * italic(beta) * ")"),
     fill = "Fit"
   ) +
   theme(panel.grid.major = element_blank(),
         panel.grid.minor = element_blank())
 
+p1
 
 
+###-- Names
 tbl <- 
   asym_model |>
-  mutate(model = ifelse(k == 0, "Symmetric homophily", "Asymmetric homophily")) |> 
+  mutate(model = ifelse(k == 0, "Equal homophily", "Unequal homophily")) |> 
   mutate(model = ifelse(h == 0 & k == 0, "Null", model)) 
 
 
-
 p2 <- 
-  tbl |>
+  tbl |> 
   ggplot(aes(h, fit, group = k)) +
   # Asymmetric models
   geom_line(
-    data = tbl |> filter(model == "Asymmetric homophily"),
-    aes(color = "Asymmetric homophily", alpha = k)
+    data = tbl |> filter(model == "Unequal homophily"),
+    aes(color = "Unequal homophily", alpha = k)
   ) +
   # Symmetric model
   geom_line(
-    data = tbl |> filter(model == "Symmetric homophily"),
-    aes(color = "Symmetric homophily"),
+    data = tbl |> filter(model == "Equal homophily"),
+    aes(color = "Equal homophily"),
     linewidth = 1
   ) +
   scale_color_manual(
     name = "Condition",
-    values = c("Asymmetric homophily" = "grey40", "Symmetric homophily" = "red")
+    values = c("Unequal homophily" = "grey40", "Equal homophily" = "red")
   ) +
-  scale_alpha_continuous(name = "Asymmetry parameter (k)") +
+  scale_alpha_continuous(name = "Homophily variance parameter (k)") +
   labs(
-    y = "Fit",
-    x = "Homophily strength parameter (Beta)"
+    y = "MAE",
+    x = expression("Homophily strength parameter (" * italic(beta) * ")"),
   ) +
   theme(
-    legend.position = c(1, .5),
+    legend.position = c(1.05, .35),
     legend.justification = c(1, 0),
-  )
+    legend.title = element_text(size = 15),
+    legend.text  = element_text(size = 15))
 
 
-figure_3 <- p1 | p2
+figure_3 <- p1 | p2 
+figure_3 <- figure_3 + plot_annotation(tag_levels = "A")
 figure_3
 ggsave(plot = figure_3, "output/figure3.png", scale = 1.1, dpi = 500)
+

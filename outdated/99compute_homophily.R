@@ -39,7 +39,7 @@ hom <-
   summarise(av_dist = mean(abs_distance, na.rm = TRUE),
             sd_dist = sd(abs_distance, na.rm = TRUE))
 
-saveRDS(hom, "data/homophily/homophily.RDS")
+saveRDS(hom, "data/network/observed_homophily.rds")
 
 
 

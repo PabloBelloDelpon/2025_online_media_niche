@@ -6,8 +6,7 @@ library(hrbrthemes)
 
 theme_set(theme_ipsum(axis_title_size = 14, strip_text_size =  14) + 
             theme(
-  legend.position = "none",
-  plot.background = element_rect(color = "white")))
+  legend.position = "none"))
 
 ###--- Data
 domain_final <- readRDS("data/main/ego_alter_domain_tabs.RDS") |> distinct(domain) |> pull()
@@ -42,6 +41,7 @@ tbl <-
 p1 <-  
   tbl |> 
   filter(measure != "Adfontes Reliability") |> 
+  mutate(measure = ifelse(measure == "Adfontes Bias", "Ad Fontes Bias", "AllSides Rating")) |> 
   ggplot(aes(domain_ideo, value, color = domain_ideo)) +
   geom_point() +
   geom_smooth(method = "lm") +
@@ -50,7 +50,7 @@ p1 <-
        y = "External domain ideology") +
   scale_color_gradient(low = "#00AEF3", high = "#de0100")
 
-
+p1
 ggsave("output/figure_A1.png", dpi = 400, scale = .7)
 
 ###--- Correlations

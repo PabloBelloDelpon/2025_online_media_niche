@@ -2,19 +2,23 @@
 library(tidyverse)
 library(patchwork)
 library(hrbrthemes)
-source("/Users/pb216/Desktop/projects/2025_online_media_niche/sims/99function_sim_homophily.R")
-theme_set(theme_ipsum(axis_title_size = 15))
+library(MetBrewer)
+source("sims/99function_sim_homophily.R")
+set.seed(061295)
+
+colors <- met.brewer("Java", n = 3)
+theme_set(theme_ipsum(axis_title_size = 15, base_size = 15))
 
 ###--- Observed homophily
 obs <- 
-  readRDS("/Users/pb216/Desktop/projects/2025_online_media_niche/data/homophily/homophily.RDS") |> 
+  readRDS("data/network/observed_homophily.rds") |> 
   select(ego_ntile = ego_ideology, av_dist) |> 
   mutate(condition = "Observed Network") |> 
   drop_na()
 
 ###--- Ego ideology
 tbl <- 
-  readRDS("/Users/pb216/Desktop/projects/2025_online_media_niche/data/ideology/ego_ideology.RDS") |> 
+  readRDS("data/ideology/ego_ideology.RDS") |> 
   select(user, ideology = ideology_new) |> 
   mutate(q = ntile(ideology, n = 100)) |> 
   group_by(q) |> 
@@ -120,8 +124,8 @@ ex_asym <- ex_asym[[which.min(dist_asym)]] |> mutate(model = "Asymmetric model")
 ###--- 
 p1 <- 
   tibble("Null model" = dist_null, 
-       "Symmetric model" = dist_sym,
-       "Asymmetric model" = dist_asym) |> 
+       "Equal homophily model" = dist_sym,
+       "Unequal homophily model" = dist_asym) |> 
   pivot_longer(cols = 1:3, names_to = "model", values_to = "dist") |> 
   group_by(model) |> 
   summarise(mean_dist = mean(dist),
@@ -135,17 +139,28 @@ p1 <-
 
 
 ###---- 
-p2 <- 
+tbl2 <- 
   bind_rows(ex_null,
-          ex_sym,
-          ex_asym) |> 
+            ex_sym |> mutate(model = "Equal homophily model"),
+            ex_asym |> mutate(model = "Unequal homophily model"),
+            obs |> mutate(model = "Observed network"))
+
+tbl2 |> 
+  count(model, h, k)
+
+p2 <- 
+ tbl2 |> 
+  mutate(model = factor(model, levels = c("Observed network", 
+                                          "Null model",
+                                          "Equal homophily model", 
+                                          "Unequal homophily model"))) |> 
   ggplot(aes(ego_ntile, av_dist, color = model)) +
   geom_line(linewidth = 1) +
-  geom_line(data = obs, color = "black", linewidth = 1) +
   labs(color = "",
-       y = "Av. Ego-Alter Perc Distance",
-       x = "Ego Percentile")
+       y = "Mean ego-alter distance",
+       x = "Ego ideology percentile") +
+  scale_color_manual(values = c("grey10", colors)) +
+  theme(legend.position = "top")
+p2
 
-p1 + p2
-
-ggsave("output/figure_A2.png", dpi = 400, scale = .7)
+ggsave("output/figure_A2.png", dpi = 400, width = 10, height = 5)
