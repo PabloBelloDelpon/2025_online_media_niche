@@ -41,9 +41,10 @@ tbl <-
 p1 <-  
   tbl |> 
   filter(measure != "Adfontes Reliability") |> 
-  mutate(measure = ifelse(measure == "Adfontes Bias", "Ad Fontes Bias", "AllSides Rating")) |> 
-  ggplot(aes(domain_ideo, value, color = domain_ideo)) +
-  geom_point() +
+  mutate(measure = ifelse(measure == "Adfontes Bias", "Ad Fontes Bias", "AllSides Rating"), 
+         measure = factor(measure, levels = c("AllSides Rating", "Ad Fontes Bias"))) |> 
+  ggplot(aes(domain_ideo, value)) +
+  geom_point(aes(color = domain_ideo)) +
   geom_smooth(method = "lm") +
   facet_wrap(~ measure, scales = "free") +
   labs(x = "Twitter-based domain ideology",

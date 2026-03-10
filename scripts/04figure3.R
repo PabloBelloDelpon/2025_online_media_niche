@@ -58,7 +58,7 @@ p1
 ###-- Names
 tbl <- 
   asym_model |>
-  mutate(model = ifelse(k == 0, "Equal homophily", "Unequal homophily")) |> 
+  mutate(model = ifelse(k == 0, "Equal homophily", "Differential homophily")) |> 
   mutate(model = ifelse(h == 0 & k == 0, "Null", model)) 
 
 
@@ -67,8 +67,8 @@ p2 <-
   ggplot(aes(h, fit, group = k)) +
   # Asymmetric models
   geom_line(
-    data = tbl |> filter(model == "Unequal homophily"),
-    aes(color = "Unequal homophily", alpha = k)
+    data = tbl |> filter(model == "Differential homophily"),
+    aes(color = "Differential homophily", alpha = k)
   ) +
   # Symmetric model
   geom_line(
@@ -78,7 +78,7 @@ p2 <-
   ) +
   scale_color_manual(
     name = "Condition",
-    values = c("Unequal homophily" = "grey40", "Equal homophily" = "red")
+    values = c("Differential homophily" = "grey40", "Equal homophily" = "red")
   ) +
   scale_alpha_continuous(name = "Homophily variance parameter (k)") +
   labs(
@@ -86,7 +86,7 @@ p2 <-
     x = expression("Homophily strength parameter (" * italic(beta) * ")"),
   ) +
   theme(
-    legend.position = c(1.05, .35),
+    legend.position = c(1.05, .4),
     legend.justification = c(1, 0),
     legend.title = element_text(size = 15),
     legend.text  = element_text(size = 15))
@@ -95,5 +95,5 @@ p2 <-
 figure_3 <- p1 | p2 
 figure_3 <- figure_3 + plot_annotation(tag_levels = "A")
 figure_3
-ggsave(plot = figure_3, "output/figure3.png", scale = 1.1, dpi = 500)
+ggsave(plot = figure_3, "output/figure3.png", scale = 1.3, dpi = 500)
 

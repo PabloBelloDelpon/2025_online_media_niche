@@ -66,7 +66,7 @@ m1 <-
   params |> 
   bind_cols("dist" = dist_sym) 
 
-###--- Now run it i times fro the best fitting parameter
+###--- Now run it i times for the best fitting parameter
 k = 0
 h = rep(m1 |> filter(dist == min(dist)) |> pull(h), 100)
 
@@ -142,7 +142,7 @@ p1 <-
 tbl2 <- 
   bind_rows(ex_null,
             ex_sym |> mutate(model = "Equal homophily model"),
-            ex_asym |> mutate(model = "Unequal homophily model"),
+            ex_asym |> mutate(model = "Differential homophily model"),
             obs |> mutate(model = "Observed network"))
 
 tbl2 |> 
@@ -153,7 +153,7 @@ p2 <-
   mutate(model = factor(model, levels = c("Observed network", 
                                           "Null model",
                                           "Equal homophily model", 
-                                          "Unequal homophily model"))) |> 
+                                          "Differential homophily model"))) |> 
   ggplot(aes(ego_ntile, av_dist, color = model)) +
   geom_line(linewidth = 1) +
   labs(color = "",
