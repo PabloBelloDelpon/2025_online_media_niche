@@ -150,9 +150,6 @@ tbl2 <-
     obs |> mutate(model = "Observed network")
   )
 
-tbl2 |>
-  count(model, h, k)
-
 
 ###--- Figure A2
 p2 <-

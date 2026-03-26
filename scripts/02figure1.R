@@ -1,7 +1,5 @@
 ###--- Libraries
 library(tidyverse)
-library(showtext)
-library(sysfonts)
 library(ggridges)
 library(glue)
 library(hrbrthemes)
@@ -73,7 +71,7 @@ p3 <-
       x = ntile, # x values
       y = domain_name, # the groupping variable
       height = prop_roll,
-      fill = stat(x)
+      fill = after_stat(x)
     ) # the y axis height
   ) +
   geom_density_ridges_gradient(stat = "identity", scale = 1) +
@@ -123,7 +121,6 @@ other <-
 
 x <- other$mean
 y <- density(x, n = 2^12)
-q <- quantile(x, probs = c(.2, .4, .6, .8))
 tbl <- tibble(x = y$x, y = y$y)
 
 (p2 <-

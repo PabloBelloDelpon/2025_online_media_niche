@@ -4,8 +4,8 @@ library(tidyverse)
 library(hrbrthemes)
 
 ###--- Graphic options
-lib_colors = c("#A7C7E7", "#1E3A5F")
-cons_colors = c("#FF9999", "#990000")
+lib_colors <- c("#A7C7E7", "#1E3A5F")
+cons_colors <- c("#FF9999", "#990000")
 
 theme_set(
   theme_ipsum(
@@ -96,11 +96,11 @@ adoptions_lib <-
 plots <- list()
 
 for (d in unique(adoptions_lib$domain)) {
-  plots[[length(plots) + 1]] =
+  plots[[length(plots) + 1]] <-
     adoptions_lib |>
     filter(domain == d) |>
     ggplot(aes(ego_ntile, perc)) +
-    geom_col(color = "#00AEF3", fill = "#00AEF3") +
+    geom_col(color = "#00AEF3", fill = "#00AEF3", na.rm = TRUE) +
     labs(
       y = "Percentage",
       x = "Ego ideology percentile",
@@ -131,7 +131,7 @@ for (d in unique(exposures_lib$domain)) {
     exposures_lib |>
     filter(domain == d) |>
     ggplot(aes(ego_ntile, perc)) +
-    geom_col(color = "#00AEF3", fill = "#00AEF3") +
+    geom_col(color = "#00AEF3", fill = "#00AEF3", na.rm = TRUE) +
     labs(
       y = "Percentage",
       x = "Ego ideology percentile",
@@ -159,7 +159,7 @@ for (d in unique(sims_lib$domain)) {
     sims_lib |>
     filter(domain == d) |>
     ggplot(aes(ego_ntile, perc, group = model, fill = model, alpha = model)) +
-    geom_col(position = "identity", linetype = 0) +
+    geom_col(position = "identity", linetype = 0, na.rm = TRUE) +
     labs(
       y = "Percentage",
       x = "Ego ideology percentile",
@@ -197,11 +197,11 @@ adoptions_cons <-
 plots <- list()
 
 for (d in unique(adoptions_cons$domain)) {
-  plots[[length(plots) + 1]] =
+  plots[[length(plots) + 1]] <-
     adoptions_cons |>
     filter(domain == d) |>
     ggplot(aes(ego_ntile, perc)) +
-    geom_col(color = "#de0100", fill = "#de0100") +
+    geom_col(color = "#de0100", fill = "#de0100", na.rm = TRUE) +
     labs(
       y = "Percentage",
       x = "Ego ideology percentile",
@@ -231,7 +231,7 @@ for (d in unique(exposures_cons$domain)) {
     exposures_cons |>
     filter(domain == d) |>
     ggplot(aes(ego_ntile, perc)) +
-    geom_col(color = "#de0100", fill = "#de0100") +
+    geom_col(color = "#de0100", fill = "#de0100", na.rm = TRUE) +
     labs(
       y = "Percentage",
       x = "Ego ideology percentile",
@@ -259,7 +259,7 @@ for (d in unique(sims_cons$domain)) {
     sims_cons |>
     filter(domain == d) |>
     ggplot(aes(ego_ntile, perc, group = model, fill = model, alpha = model)) +
-    geom_col(position = "identity", linetype = 0) +
+    geom_col(position = "identity", linetype = 0, na.rm = TRUE) +
     labs(
       y = "Percentage",
       x = "Ego ideology percentile",

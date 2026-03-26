@@ -13,13 +13,13 @@ if (dir.exists(output_folder) == FALSE) {
 
 ###--- Ego ideology data
 ideo_egos <-
-  readRDS("data/ego_ideology.RDS") |>
+  readRDS("data/ego_ideology.rds") |>
   filter(ideo_est != Inf & ideo_est != -Inf) |>
   mutate(ego_ntile = ntile(ideo_est, n = 100))
 
 ###--- Alter ideology data
 ideo_alters <-
-  readRDS("data/alter_ideology.RDS") |>
+  readRDS("data/alter_ideology.rds") |>
   filter(ideo_est != Inf & ideo_est != -Inf) |>
   mutate(alter_ntile = ntile(ideo_est, n = 100))
 
@@ -86,6 +86,10 @@ done <-
   filter(network_id == max(network_id)) |>
   pull(network_id)
 
+if (length(done) == 0) {
+  done <- 0
+}
+
 
 ###--- Prepare cluster
 cl <- makeCluster(parallel::detectCores() - 1)
@@ -143,7 +147,7 @@ foreach(i = (done + 1):nrow(params), .packages = c("dplyr", "tibble")) %dopar%
 
       ###--- Put together complete simulated network
       network[[j]] <-
-        bind_rows(new_network) %>%
+        bind_rows(new_network) |>
         mutate(ego_ntile = j)
     }
 
@@ -151,5 +155,5 @@ foreach(i = (done + 1):nrow(params), .packages = c("dplyr", "tibble")) %dopar%
     network <- bind_rows(network)
     parameters <- tibble(model, k, h, n_alters)
     network <- list("network" = network, "parameters" = parameters)
-    saveRDS(network, paste0(output_folder, "netowrk_", i, ".rds"))
+    saveRDS(network, paste0(output_folder, "network_", i, ".rds"))
   }

@@ -22,7 +22,7 @@ tbl <- readRDS("data/domain_ideology_external.rds")
   scale_color_gradient(low = "#00AEF3", high = "#de0100"))
 
 
-ggsave("output/figure_A1.png", dpi = 400, scale = .7)
+ggsave("output/figure_A1.png", dpi = 400, scale = 1.5)
 
 ###--- Correlations
 

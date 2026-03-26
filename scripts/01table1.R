@@ -2,25 +2,29 @@
 library(tidyverse)
 library(xtable)
 library(data.table)
-
+library(DescTools)
 
 ###--- Load the data ---###
 
 ###--- NYT to use as ideology cutoff point
 nyt_ideo <-
   readRDS("data/domain_ideology.rds") |>
-  filter(str_detect(domain, "nytimes") == TRUE) |>
+  filter(domain == "nytimes") |>
   pull(mean)
 
 ###--- Ideology estimates for egos
 ideo_egos <-
-  readRDS("data/ego_ideology.rds")
+  readRDS("data/ego_ideology.rds") |>
+  mutate(ideo_bi = ifelse(ideo_est > nyt_ideo, "Conservative", "Liberal"))
 
 ###--- Ideology estimates for alters
 ideo_alters <-
-  readRDS("data/alter_ideology.rds")
+  readRDS("data/alter_ideology.rds") |>
+  mutate(ideo_bi = ifelse(ideo_est > nyt_ideo, "Conservative", "Liberal"))
 
 ###--- Network data
+# You might run out of memory. If so, use mem.maxVSize(32e9).
+# Alternatively, substitute with data.table code
 network <-
   readRDS("data/observed_network.rds") |>
   left_join(ideo_egos |> select(ego_int, ideo_bi)) |>

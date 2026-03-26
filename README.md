@@ -14,6 +14,6 @@ Running scripts `01` through `07` in order will reproduce all figures in the mai
 
 ## Other
 
-**`scripts/99_randomize_networks.R`** contains the core network simulation described in the Data and Methods section. It generates simulated networks between the users and egos in our data, based on the homophily function described in the article. Full replication of the end results as presented in the paper additionally requires tweet-level data for egos and alters, which we are unable to share publicly due to data volume and privacy considerations.
+**`scripts/99randomize_networks.R`** contains the core network simulation described in the Data and Methods section. It generates simulated networks between the users and egos in our data, based on the homophily function described in the article. Full replication of the end results as presented in the paper additionally requires tweet-level data for egos and alters, which we are unable to share publicly due to data volume and privacy considerations.
 
-**`scripts/99_function_sim_homophily.R`** contains a helper function used to produce Figure A2.
+**`scripts/99function_sim_homophily.R`** contains a helper function used to produce Figure A2.
