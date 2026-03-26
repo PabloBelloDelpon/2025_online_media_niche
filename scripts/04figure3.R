@@ -99,4 +99,4 @@ tbl <-
 ###---
 figure_3 <- p1 | p2
 (figure_3 <- figure_3 + plot_annotation(tag_levels = "A"))
-ggsave(plot = figure_3, "output/figure3.png", scale = 1.3, dpi = 500)
+ggsave(plot = figure_3, "output/figure3.png", scale = 1.6, dpi = 500)

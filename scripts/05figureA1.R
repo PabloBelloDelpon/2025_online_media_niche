@@ -1,5 +1,3 @@
-###--- Generate figure A1
-
 ###--- Libraries
 library(tidyverse)
 library(hrbrthemes)

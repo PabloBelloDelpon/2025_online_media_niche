@@ -1,32 +1,41 @@
-###--- Generate Table 1
-
 ###--- Libraries
 library(tidyverse)
 library(xtable)
 library(data.table)
 
-###--- Load ideology data
+
+###--- Load the data ---###
+
+###--- NYT to use as ideology cutoff point
 nyt_ideo <-
-  readRDS("data/domain_ideology.RDS") |>
+  readRDS("data/domain_ideology.rds") |>
   filter(str_detect(domain, "nytimes") == TRUE) |>
   pull(mean)
 
+###--- Ideology estimates for egos
 ideo_egos <-
-  readRDS("data/ego_ideology.RDS")
+  readRDS("data/ego_ideology.rds")
 
+###--- Ideology estimates for alters
 ideo_alters <-
-  readRDS("data/alter_ideology.RDS")
+  readRDS("data/alter_ideology.rds")
 
-###--- Network Data
+###--- Network data
 network <-
-  readRDS("data/observed_network.RDS") |>
+  readRDS("data/observed_network.rds") |>
   left_join(ideo_egos |> select(ego_int, ideo_bi)) |>
   left_join(ideo_alters |> select(alter_int, alter_ideo_bi = ideo_bi))
 
-###--- Adoptions Data
-ego_data <- readRDS("data/domain_egos_adoptions.RDS")
+###--- Ego domain adoption data
+ego_data <- readRDS("data/domain_egos_adoptions.rds")
 
-###--- Proportion of each ideology
+###--- Exposure volume
+exposure_data <- readRDS("data/ego_alter_domain_tabs_binary.rds")
+
+
+###--- Calculations for table 1 ---###
+
+###--- Proportion of egos and alters of each ideology
 (ideo_egos2 <-
   ideo_egos |>
   count(ideo_bi) |>
@@ -96,11 +105,8 @@ homophily <-
 
 
 ###--- Exposure Volume
-data <- readRDS("data/ego_alter_domain_tabs_binary.RDS")
-
-
 (r5 <-
-  data |>
+  exposure_data |>
   as_tibble() |>
   group_by(q_ego) |>
   summarise(n_exposed = sum(n)) |>

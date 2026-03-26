@@ -1,5 +1,3 @@
-###--- Figure 1
-
 ###--- Libraries
 library(tidyverse)
 library(showtext)
@@ -25,7 +23,7 @@ theme_set(
 
 ###--- Load data
 domain_ideology <-
-  readRDS("data/domain_ideology.RDS")
+  readRDS("data/domain_ideology.rds")
 
 ###--- Lists of domains to plot
 dom_list <- list(
@@ -66,8 +64,8 @@ tbl <-
   drop_na()
 
 
-###--- Plot
-p1 <-
+###--- Panel C
+p3 <-
   tbl |>
   arrange(domain_name) |>
   ggplot(
@@ -80,11 +78,10 @@ p1 <-
   ) +
   geom_density_ridges_gradient(stat = "identity", scale = 1) +
   scale_fill_gradient(low = '#00AEF3', high = '#de0100') +
-  #scale_x_continuous(breaks = c(0,25,50,75,100), limits = c(0,100)) +
   labs(title = "", y = "", x = "Ideology percentile")
 
-p1 <-
-  p1 +
+p3 <-
+  p3 +
   theme(
     legend.position = "none",
     panel.grid = element_blank(),
@@ -95,7 +92,28 @@ p1 <-
   )
 
 
-###--- Second Plot (Domain Ideology Density plot)
+###--- Panel A
+news <-
+  domain_ideology |>
+  filter(type == "News")
+
+x <- news$mean
+y <- density(x, n = 2^12)
+q <- quantile(x, probs = c(.2, .4, .6, .8))
+tbl <- tibble(x = y$x, y = y$y)
+
+(p1 <-
+  tbl |>
+  ggplot(aes(x, y)) +
+  geom_line() +
+  geom_segment(aes(xend = x, yend = 0, colour = x)) +
+  scale_color_gradient(low = '#00AEF3', high = '#de0100') +
+  labs(title = "News media domains", y = "Density", x = "Ideology") +
+  xlim(c(-1, 2.2)) +
+  theme(legend.position = "none"))
+
+
+###--- Panel B
 
 ###--- "Other" category
 other <-
@@ -119,29 +137,8 @@ tbl <- tibble(x = y$x, y = y$y)
   theme(legend.position = "none"))
 
 
-#############--------
-news <-
-  domain_ideology |>
-  filter(type == "News")
-
-x <- news$mean
-y <- density(x, n = 2^12)
-q <- quantile(x, probs = c(.2, .4, .6, .8))
-tbl <- tibble(x = y$x, y = y$y)
-
-(p3 <-
-  tbl |>
-  ggplot(aes(x, y)) +
-  geom_line() +
-  geom_segment(aes(xend = x, yend = 0, colour = x)) +
-  scale_color_gradient(low = '#00AEF3', high = '#de0100') +
-  labs(title = "News media domains", y = "Density", x = "Ideology") +
-  xlim(c(-1, 2.2)) +
-  theme(legend.position = "none"))
-
-
 ###--- Put the plots together
-ptw <- (p3 / p2) | p1
+ptw <- (p1 / p2) | p3
 ptw + plot_annotation(tag_levels = 'A')
 
 ggsave(glue("output/figure1.png"), scale = 1.2, dpi = 600)

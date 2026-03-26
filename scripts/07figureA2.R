@@ -1,9 +1,9 @@
-##---- Differential homophily ---###
+###--- Libraries
 library(tidyverse)
 library(patchwork)
 library(hrbrthemes)
 library(MetBrewer)
-source("99function_sim_homophily.R")
+source("scripts/99function_sim_homophily.R")
 set.seed(061295)
 
 ###---- Graphic theme
@@ -19,7 +19,7 @@ obs <-
 
 ###--- Ego ideology
 tbl <-
-  readRDS("data/ego_ideology.RDS") |>
+  readRDS("data/ego_ideology.rds") |>
   select(ego_int, ideology = ideo_est) |>
   mutate(q = ntile(ideology, n = 100)) |>
   group_by(q) |>
@@ -75,6 +75,7 @@ h = rep(m1 |> filter(dist == min(dist)) |> pull(h), 100)
 params <- expand.grid(k = k, h = h)
 dist_sym <- c()
 ex_sym <- list()
+
 for (i in 1:nrow(params)) {
   sim <- homophily(k = 0, h = params$h[i])
   dist_sym[i] <- sum(abs(obs$av_dist - sim$av_dist)) / 100
@@ -93,6 +94,7 @@ h = seq(0, 1, .1) # parameter that controls the amount of homophily {0 = uniform
 
 params <- expand.grid(k = k, h = h)
 dist_asym <- c()
+
 for (i in 1:nrow(params)) {
   sim <- homophily(k = params$k[i], h = params$h[i])
   dist_asym[i] <- sum(abs(obs$av_dist - sim$av_dist)) / 100
@@ -105,12 +107,13 @@ m2 <-
 
 
 ###--- Now run it i times for the best fitting parameter
-k = rep(m2 |> filter(dist == min(dist)) |> pull(k), 100)
-h = m2 |> filter(dist == min(dist)) |> pull(h)
+k <- rep(m2 |> filter(dist == min(dist)) |> pull(k), 100)
+h <- m2 |> filter(dist == min(dist)) |> pull(h)
 
 params <- expand.grid(k = k, h = h)
 dist_asym <- c()
 ex_asym <- list()
+
 for (i in 1:nrow(params)) {
   sim <- homophily(k = params$k[i], h = params$h[i])
   dist_asym[i] <- sum(abs(obs$av_dist - sim$av_dist)) / 100
@@ -175,6 +178,5 @@ p2 <-
   scale_color_manual(values = c("grey10", colors)) +
   theme(legend.position = "top")
 
-p2
 
 ggsave("output/figure_A2.png", dpi = 400, width = 10, height = 5)
