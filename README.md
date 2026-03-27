@@ -6,7 +6,7 @@ This repository contains all data and code necessary to reproduce the figures in
 
 ## Data
 
-The replication data are available at [Repository Name] ([DOI/URL]). Please download the data files and place them in the `data/` folder before running any scripts.
+The replication data are available here: [replication data](https://doi.org/10.7910/DVN/PCQCPN). Please download the data files and place them in the `data/` folder before running any scripts.
 
 ## Replication
 
